@@ -250,6 +250,25 @@ table.spec td small{color:var(--mute);font-weight:300}
 .grand{margin-top:28px;text-align:right}.grand b{font-family:'Cormorant Garamond','Prompt',serif;font-weight:600;font-size:40px;color:var(--acc);margin-left:8px}
 .grand div{font-size:12px;color:var(--mute)}
 .newroom{margin-top:22px;display:flex;gap:8px;flex-wrap:wrap}
+.slot.emp{padding:9px 20px;display:flex;align-items:center;gap:10px}
+.slot.emp .sloth{margin:0;flex:1}
+.slot.emp .eh{font-size:12px;color:var(--mute)}
+.it{padding:12px 0 14px;border-top:1px dashed var(--line)}.it.first{border-top:0;padding-top:2px}
+.it.locked{background:#f3f8f5;margin:0 -20px;padding-left:20px;padding-right:20px}
+.ith{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--mute);margin-bottom:6px;gap:8px}
+.av{font-size:11.5px;line-height:1.45;margin-top:6px;padding:4px 8px;background:#eef5f0;color:#2d6a48;border-left:2px solid #2d7a4f}
+.av.n{background:#fbf3e6;color:#8a5a12;border-color:var(--warn)}.av.u{background:var(--bg);color:var(--mute);border-color:var(--line)}
+.card .av{font-size:11px;margin-top:7px;padding:3px 7px}
+.provsel{font-size:12.5px;padding:6px 8px;border:1px solid var(--line);background:var(--paper);border-radius:2px;max-width:100%}
+.provsel.on{border-color:var(--ink)}
+.provwrap{display:inline-flex;gap:8px;align-items:center;font-size:12.5px;flex-wrap:wrap}
+.provwrap label{display:inline-flex;gap:5px;align-items:center;font-size:12px;color:var(--mute)}
+.metaf select{font-size:13.5px;padding:9px 11px;border:1px solid var(--line);background:var(--paper);width:100%;border-radius:2px}
+.acts.bot{margin-top:22px;justify-content:flex-end}
+.wfix{font-size:12.5px;color:var(--mute)}
+.calc .lb{font-size:11.5px;color:var(--mute)}
+#dlg input.pin{font-size:22px;letter-spacing:.4em;text-align:center;width:100%;padding:10px;border:1px solid var(--line);margin-top:6px}
+#dlg .fld{display:block;margin:10px 0 0;font-size:12.5px}#dlg .fld input,#dlg .fld select{display:block;width:100%;margin-top:4px;font-size:14px;padding:8px 10px;border:1px solid var(--line);background:var(--paper)}
 #dlg{position:fixed;inset:0;background:#00000070;z-index:99;display:none;align-items:center;justify-content:center;padding:20px}
 #dlg.open{display:flex}
 #dlg>div{background:var(--paper);max-width:560px;width:100%;padding:26px 28px;max-height:90vh;overflow:auto}
@@ -326,7 +345,7 @@ table.spec td small{color:var(--mute);font-weight:300}
 <div class="ctl" id="ctl"><div class="wrap" style="position:relative">
   <div class="prow"><span class="lbl">ราคา / กล่อง</span><div class="tabs" id="tabs"></div><div class="seg" id="seg"></div></div>
   <div class="subs" id="subs" style="display:none"></div>
-  <div class="frow"><span id="stores" style="display:contents"></span><span class="sep"></span><span id="fbtns" style="display:contents"></span><input class="search" id="q" type="search" placeholder="ค้นหา แบรนด์ / รุ่น / รหัส"></div>
+  <div class="frow"><span class="provwrap"><select id="prov" class="provsel" aria-label="จังหวัดของสาขา"></select><label id="provOnlyL"><input type="checkbox" id="provOnly"> เฉพาะที่มีในสาขา</label></span><span class="sep"></span><span id="stores" style="display:contents"></span><span class="sep"></span><span id="fbtns" style="display:contents"></span><input class="search" id="q" type="search" placeholder="ค้นหา แบรนด์ / รุ่น / รหัส"></div>
 </div><div id="pop"><div class="wrap"><div class="popin" id="popin"></div></div></div></div>
 
 <div id="browse"><div class="wrap">
@@ -341,17 +360,25 @@ table.spec td small{color:var(--mute);font-weight:300}
   <div class="bh"><div class="lbl">Selection</div><h2>รายการที่เลือก</h2></div>
   <div class="metaf">
     <div><label class="lbl">ลูกค้า / โครงการ</label><input id="client" placeholder="ชื่อ – โครงการ"></div>
+    <div><label class="lbl">จังหวัดที่จะซื้อ (สาขาใกล้บ้าน)</label><select id="prov2"></select></div>
     <div class="staff-only"><label class="lbl">ผู้จัดทำ</label><input id="designer" value="PNDX Studio &amp; Design"></div>
     <div class="staff-only"><label class="lbl">ผู้อนุมัติ (ลูกค้า)</label><input id="approver" placeholder="ชื่อผู้ยืนยันล็อกรายการ"></div>
   </div>
-  <div class="acts">
-    <button class="btn pri cust-only" id="btnSend">ส่งรายการให้ PNDX</button>
-    <button class="btn" id="btnPdfBoard">บันทึกเป็น PDF</button>
-    <button class="btn staff-only" id="btnPrintBoard">พิมพ์</button>
-    <button class="btn staff-only" id="btnCopy">คัดลอกรายการสั่งซื้อ</button>
-    <button class="btn staff-only" id="btnLink">คัดลอกลิงก์รายการ</button>
-    <button class="btn staff-only" id="btnSave">บันทึกโปรเจกต์</button>
-    <button class="btn staff-only" id="btnLoad">เปิดโปรเจกต์</button><input type="file" id="fileLoad" accept=".json,application/json" style="display:none">
+  <div class="rooms" id="rooms"></div>
+  <div class="newroom"><input class="rin" id="newRoom" placeholder="เพิ่มห้อง เช่น ห้องซักล้าง"><button class="btn" id="addRoom">+ เพิ่มห้อง</button></div>
+  <div id="orders"></div>
+  <div class="grand" id="grand"></div>
+  <div class="acts bot">
+    <button class="btn bad" id="btnClear">ล้างรายการทั้งหมด</button>
+    <button class="btn" id="btnShare">บันทึกลิงก์โครงการ</button>
+    <button class="btn pri" id="btnPdfBoard">บันทึกเป็น PDF</button>
+  </div>
+  <div class="acts bot staff-only" style="margin-top:10px">
+    <button class="btn" id="btnNewLink">สร้างลิงก์ให้ลูกค้า</button>
+    <button class="btn" id="btnPrintBoard">พิมพ์</button>
+    <button class="btn" id="btnCopy">คัดลอกรายการสั่งซื้อ</button>
+    <button class="btn" id="btnSave">บันทึกไฟล์โปรเจกต์</button>
+    <button class="btn" id="btnLoad">เปิดไฟล์โปรเจกต์</button><input type="file" id="fileLoad" accept=".json,application/json" style="display:none">
   </div>
   <details class="guide staff-only"><summary>เช็กลิสต์ก่อนล็อกกระเบื้อง</summary>
     <ol>
@@ -360,20 +387,16 @@ table.spec td small{color:var(--mute);font-weight:300}
       <li><b>สเปกหน้าร้าน</b> — ลาย ผิว ขอบ ความหนา ตรวจกับตารางสเปกจริง</li>
       <li><b>ขอบและร่องยาแนว</b> — Rectified ปูร่องแคบได้ ขอบธรรมดาเผื่อร่องกว้างกว่า</li>
       <li><b>Shade V3/V4</b> — แต่ละแผ่นต่างกันมาก ดูตัวอย่างหลายแผ่น</li>
-      <li><b>รหัสและล็อต</b> — สั่งครั้งเดียวล็อตเดียวกัน เผื่อ 1 กล่องไว้ซ่อม</li>
-      <li><b>เผื่อเศษตัด</b> — ปูตรง 3–7% (ตั้งต้น 5%) · ทแยง ~10% · ลายไม้/ก้างปลา ~15%</li>
+      <li><b>รหัสและล็อต</b> — สั่งครั้งเดียวล็อตเดียวกัน จากสาขาเดียวที่มีครบ</li>
+      <li><b>เผื่อเศษตัด</b> — ค่าเริ่มต้น 7% · ทแยง ~10% · ลายไม้/ก้างปลา ~15% (ทีมงานปรับได้)</li>
       <li><b>ตัวอย่างจริง</b> — ดูแผ่นจริงใต้แสงหน้างานก่อนอนุมัติ</li>
       <li><b>ราคาและสต็อก</b> — ตรวจที่หน้าร้านอีกครั้งก่อนชำระเงิน</li>
     </ol>
   </details>
-  <div class="rooms" id="rooms"></div>
-  <div class="newroom"><input class="rin" id="newRoom" placeholder="เพิ่มห้อง เช่น ห้องซักล้าง"><button class="btn" id="addRoom">+ เพิ่มห้อง</button></div>
-  <div id="orders"></div>
-  <div class="grand" id="grand"></div>
 </div></section>
 
 <footer class="ft"><div class="wrap"><span class="lockup"><svg class="mark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linejoin="round"><path d="M5 43V5h38v38z"/><path d="M5 17h12V5M17 17v26M29 43V29h14"/><path d="M5 29h12M29 29V17h14"/><path d="M22 38 38 22v16z" fill="currentColor" stroke="none"/></svg>
-<span class="vl"></span><img alt="PNDX Studio &amp; Design" src="assets/logo.png"></span><span id="ftTxt"></span><button id="staffToggle"></button></div></footer>
+<span class="vl"></span><img alt="PNDX Studio &amp; Design" src="assets/logo.png"></span><span id="ftTxt"></span><button id="staffToggle" class="staff-only"></button></div></footer>
 
 <button id="fab">รายการที่เลือก <b id="fabCnt">0</b></button>
 <div id="dtl"><div class="dbox" id="dbox"></div></div>
@@ -382,6 +405,7 @@ table.spec td small{color:var(--mute);font-weight:300}
 
 <script src="data/tiles.js"></script>
 <script src="data/prices.js"></script>
+<script src="data/branches.js"></script>
 <script src="assets/html2canvas.min.js"></script>
 <script>
 const SRC=window.TILES||{at:{},items:[]};
@@ -408,7 +432,12 @@ const INCH={10:4,15:6,20:8,25:10,30:12,40:16,45:18,50:20,60:24,80:32,90:36,100:4
 const DEF_ROOMS=[['ห้องโถงรับแขก',['พื้น','ผนัง']],['ห้องนอน',['พื้น','ผนัง']],['ห้องน้ำ',['พื้นโซนแห้ง','พื้นโซนเปียก (ส่วนอาบน้ำ)','ผนังโซนแห้ง','ผนังโซนเปียก']],['ห้องครัว',['พื้น','ผนัง Backsplash']],['ระเบียง / โรงรถ',['พื้นภายนอก / ระเบียง']]];
 const SLOT_PRESETS=['พื้น','พื้นโซนแห้ง','พื้นโซนเปียก (ส่วนอาบน้ำ)','ผนังโซนแห้ง','พื้นภายนอก / ระเบียง','ผนัง','ผนังโซนเปียก','ผนัง Backsplash','ผนังฟีเจอร์','ผนังภายนอก'];
 const WASTE=[[0,'ไม่เผื่อ'],[3,'3% · ห้องโล่ง ปูตรง'],[5,'5% · ปูตรง (มาตรฐาน)'],[7,'7% · ห้องมีมุม ตัดเยอะ'],[10,'10% · ปูทแยง'],[15,'15% · ลายไม้ / ก้างปลา'],[20,'20% · ลายซับซ้อน']];
-const DEF_WASTE=5;
+const DEF_WASTE=7;
+const STAFF_H='43f98629e53e69762dbf5a4e95768a30b77793a4b8029c3361568dc15ec399c4';
+const PV={kk:'ขอนแก่น',cp:'ชัยภูมิ',nm:'นครราชสีมา'};
+const PVO=['kk','cp','nm'];
+const BRD=window.BRANCH||null;
+const BRC=new Set((BRD&&BRD.c)||[]);
 const TM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 const slotType=n=>/ผนัง/.test(n)?'wall':'floor';
 const slotWet=n=>/เปียก/.test(n)||(/ห้องน้ำ/.test(n)&&!/แห้ง/.test(n));
@@ -432,20 +461,54 @@ const byKey=new Map(D.map(t=>[key(t),t]));
 const BR=(()=>{const m=new Map();D.forEach(t=>m.set(t.b,(m.get(t.b)||0)+1));return [...m].sort((a,b)=>b[1]-a[1]).map(x=>x[0]);})();
 let uid=0;const nid=()=>'x'+Date.now().toString(36)+(uid++);
 const todayTh=()=>{const d=new Date();return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()+543}`;};
-const S={staff:false,hideOos:true,verOnly:false,band:-1,over:-1,mode:'band',store:'all',size:new Set(),use:new Set(),fin:new Set(),mat:new Set(),color:new Set(),pat:new Set(),brand:new Set(),style:new Set(),edge:new Set(),zone:new Set(),slip:new Set(),shade:new Set(),q:'',sort:'p',shown:48,pop:null,pick:null,detail:null,view:'browse',rooms:[]};
+const S={staff:false,prov:'',provOnly:true,hideOos:true,verOnly:false,band:-1,over:-1,mode:'band',store:'all',size:new Set(),use:new Set(),fin:new Set(),mat:new Set(),color:new Set(),pat:new Set(),brand:new Set(),style:new Set(),edge:new Set(),zone:new Set(),slip:new Set(),shade:new Set(),q:'',sort:'p',shown:48,pop:null,pick:null,detail:null,view:'browse',rooms:[]};
 const SETS=['size','use','fin','mat','color','pat','brand','style','edge','zone','slip','shade'];
-const newSlot=n=>({id:nid(),name:n,area:'',main:null,alts:[],waste:DEF_WASTE,spare:false,bx:'',note:'',chk:{spec:false,stock:false,sample:false},lock:null});
+const newSlot=n=>({id:nid(),name:n,note:'',items:[]});
+const newItem=k=>({k,area:'',bx:'',waste:DEF_WASTE,spare:false,chk:{spec:false,stock:false,sample:false},lock:null});
 function defRooms(){return DEF_ROOMS.map(([n,sl])=>({id:nid(),name:n,slots:sl.map(newSlot)}));}
-function normRooms(rs){ rs.forEach(r=>{ if(!r.id)r.id=nid(); r.slots.forEach(s=>{ if(!s.id)s.id=nid(); if(s.waste==null)s.waste=DEF_WASTE; if(!s.chk)s.chk={spec:false,stock:false,sample:false}; if(s.lock===undefined)s.lock=null; if(s.note==null)s.note=''; if(s.bx==null)s.bx=''; if(!s.alts)s.alts=[]; if(s.area==null)s.area=''; }); }); return rs; }
+function normItem(it){ const o=Object.assign(newItem(it.k),it); if(o.waste==null||o.waste==='')o.waste=DEF_WASTE; if(!o.chk)o.chk={spec:false,stock:false,sample:false}; if(o.lock===undefined)o.lock=null; if(o.area==null)o.area=''; if(o.bx==null)o.bx=''; o.spare=!!o.spare; return o; }
+function normRooms(rs){ rs.forEach(r=>{ if(!r.id)r.id=nid(); if(!r.slots)r.slots=[]; r.slots.forEach(s=>{ if(!s.id)s.id=nid(); if(s.note==null)s.note='';
+    if(!Array.isArray(s.items)){ /* older saves: one main tile + alternates -> every tile becomes its own item */
+      const its=[]; const w=(s.waste==null||Number(s.waste)===5)?DEF_WASTE:Number(s.waste);
+      if(s.main)its.push({k:s.main,area:s.area||'',bx:s.bx||'',waste:w,spare:!!s.spare,chk:s.chk||null,lock:s.lock||null});
+      (s.alts||[]).forEach(k=>{ if(k&&k!==s.main)its.push({k,waste:w}); });
+      s.items=its; ['main','alts','area','bx','waste','spare','chk','lock'].forEach(x=>delete s[x]); }
+    const seen=new Set(); s.items=s.items.filter(it=>it&&it.k&&!seen.has(it.k)&&seen.add(it.k)).map(normItem); }); }); return rs; }
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 try{
   const j=JSON.parse(LS.get('tileBoard4')||LS.get('tileBoard3')||'null');
   if(j&&j.rooms&&j.rooms.length){S.rooms=normRooms(j.rooms);['client','designer','approver'].forEach(k=>{if(j[k]!=null&&j[k]!=='')$(k).value=j[k];});}
+  if(j&&PV[j.prov])S.prov=j.prov; if(j&&j.provOnly===false)S.provOnly=false;
 }catch(e){}
 if(!S.rooms.length)S.rooms=defRooms();
-S.staff=LS.get('tileStaff')==='1'||/[?&]staff=1/.test(location.search);
-function persist(){LS.set('tileBoard4',JSON.stringify({rooms:S.rooms,client:$('client').value,designer:$('designer').value,approver:$('approver').value}));}
-function applyStaff(){ document.body.classList.toggle('staff',S.staff); $('staffToggle').textContent=S.staff?'ออกจากโหมดทีมงาน':'โหมดทีมงาน'; LS.set('tileStaff',S.staff?'1':'0'); }
+S.staff=LS.get('tileStaff6')===STAFF_H;
+function persist(){LS.set('tileBoard4',JSON.stringify({v:6,rooms:S.rooms,client:$('client').value,designer:$('designer').value,approver:$('approver').value,prov:S.prov,provOnly:S.provOnly}));}
+function applyStaff(){ document.body.classList.toggle('staff',S.staff); $('staffToggle').textContent='ออกจากโหมดทีมงาน'; LS.set('tileStaff6',S.staff?STAFF_H:''); }
+/* ---------- branch stock ---------- */
+const brName=c=>{ const x=BRD&&BRD.st[c]; if(!x)return c; return (x[2]==='tw'?'ไทวัสดุ ':'')+x[1]; };
+function avail(t){ /* {known, by:{kk:[[name,qty]],...}, max:{kk:[qty,name]}} */
+  if(!BRD||t.s==='dh')return {known:false,dh:t.s==='dh'};
+  const r=BRD.p[key(t)]; if(!r)return {known:false};
+  const by={kk:[],cp:[],nm:[]}; r.forEach(([c,q])=>{ const x=BRD.st[c]; if(x&&by[x[0]])by[x[0]].push([brName(c),q]); });
+  PVO.forEach(p=>by[p].sort((a,b)=>b[1]-a[1])); return {known:true,by,central:BRC.has(key(t))};
+}
+const BRDATE=()=>BRD?dth(BRD.at):'';
+function availLine(t,need){ /* one-line notice for the chosen province */
+  if(!S.prov)return '';
+  const a=avail(t), P=PV[S.prov];
+  if(a.dh)return `<div class="av u">ดูโฮม: เช็กสต็อกสาขาที่หน้าร้าน</div>`;
+  if(!a.known)return `<div class="av u">ยังไม่มีข้อมูลสต็อกสาขาของรายการนี้ · เช็กที่หน้าร้าน</div>`;
+  const here=a.by[S.prov];
+  if(a.central&&here.length)return `<div class="av u">ไทวัสดุแสดงจำนวนเท่ากันทุกสาขา (${fmt(here[0][1])} กล่อง) — น่าจะเป็นสต็อกคลังกลาง ไม่ใช่ของที่วางในสาขา · โทรเช็กสาขา${P}ก่อน</div>`;
+  if(here.length){ const top=here[0]; let s=`มีที่สาขา${P}: `+here.map(([n,q])=>`${esc(n)} ${fmt(q)} กล่อง`).join(' · ');
+    let cls=''; if(need&&top[1]<need){ cls=' n'; s+=` — ไม่มีสาขาไหนมีครบ ${fmt(need)} กล่อง`; }
+    return `<div class="av${cls}">${s}</div>`; }
+  const other=PVO.filter(p=>p!==S.prov&&a.by[p].length);
+  return `<div class="av n">${other.length?`ไม่มีในสาขา${P} · มีที่ `+other.map(p=>PV[p]+' ('+a.by[p].map(x=>esc(x[0])).join(', ')+')').join(' · '):'ไม่มีสต็อกในสาขาขอนแก่น ชัยภูมิ และนครราชสีมา'}</div>`;
+}
+const inProv=t=>{ if(!S.prov||!S.provOnly)return true; const a=avail(t); return !a.known||a.by[S.prov].length>0; };
+function provOpts(){ return `<option value="">ทุกสาขา · ไม่เลือกจังหวัด</option>`+PVO.map(p=>`<option value="${p}" ${S.prov===p?'selected':''}>สาขา${PV[p]}</option>`).join(''); }
+function renderProv(){ $('prov').innerHTML=provOpts(); $('prov').value=S.prov; $('prov').classList.toggle('on',!!S.prov); $('prov2').innerHTML=provOpts().replace('ทุกสาขา · ไม่เลือกจังหวัด','ไม่ระบุ'); $('prov2').value=S.prov; $('provOnly').checked=S.provOnly; $('provOnlyL').style.display=S.prov?'':'none'; }
 /* ---------- helpers ---------- */
 function inRange(t){
   if(S.band===-1)return true;
@@ -487,6 +550,7 @@ function matches(t,skip){
   if(!inRange(t))return false;
   if(S.hideOos&&(t.oos||t.gone))return false;
   if(S.verOnly&&!t.sv)return false;
+  if(!inProv(t))return false;
   if(skip!=='store'&&S.store!=='all'&&t.s!==S.store)return false;
   for(const k in FACETS){ if(k!==skip&&S[k].size&&!S[k].has(FACETS[k](t)))return false; }
   if(skip!=='use'&&S.use.size&&!anyOf(S.use,u=>useOk(t,u)))return false;
@@ -500,7 +564,7 @@ function filtered(){ const a=D.filter(t=>matches(t)); const s=S.sort; a.sort((x,
 function facet(k){ const m=new Map(); D.forEach(t=>{ if(matches(t,k)){ const v=FACETS[k](t); m.set(v,(m.get(v)||0)+1); } }); return m; }
 const cntIf=(skip,fn)=>D.reduce((n,t)=>n+(matches(t,skip)&&fn(t)?1:0),0);
 /* ---------- control bar ---------- */
-const live=t=>!(S.hideOos&&(t.oos||t.gone))&&!(S.verOnly&&!t.sv);
+const live=t=>!(S.hideOos&&(t.oos||t.gone))&&!(S.verOnly&&!t.sv)&&inProv(t);
 function renderTabs(){
   const n=(lo,hi,upto)=>D.reduce((c,t)=>c+(live(t)&&t.p<=hi&&(upto||t.p>lo||lo===0)?1:0),0);
   let h=`<button class="tab ${S.band===-1?'on':''}" data-band="-1"><b style="font-family:inherit;font-weight:400;font-size:14px;line-height:25px">ทั้งหมด</b><small>${fmt(D.filter(live).length)}</small></button>`;
@@ -548,18 +612,19 @@ function renderActive(){
   $('activef').innerHTML=a.join('');
 }
 /* ---------- cards ---------- */
-function slotsOf(k){ const o=[]; S.rooms.forEach(r=>r.slots.forEach(s=>{ if(s.main===k)o.push([r,s,'m']); else if(s.alts.includes(k))o.push([r,s,'a']); })); return o; }
+function slotsOf(k){ const o=[]; S.rooms.forEach(r=>r.slots.forEach(s=>{ const it=s.items.find(i=>i.k===k); if(it)o.push([r,s,it]); })); return o; }
 function pickRows(t){
   const k=key(t);
-  return S.rooms.map(r=>`<div class="pr"><span>${esc(r.name)}</span>${r.slots.map(s=>{ const st=s.main===k?'m':s.alts.includes(k)?'a':''; return `<button class="pb ${st}" ${s.lock?'disabled title="ล็อกแล้ว"':''} data-slot="${k}|${r.id}|${s.id}">${s.lock?'🔒 ':''}${esc(s.name)}${st==='m'?' ✓':st==='a'?' · สำรอง':''}</button>`; }).join('')}</div>`).join('');
+  return S.rooms.map(r=>`<div class="pr"><span>${esc(r.name)}</span>${r.slots.map(s=>{ const it=s.items.find(i=>i.k===k); const n=s.items.length-(it?1:0); return `<button class="pb ${it?'m':''}" ${it&&it.lock?'disabled title="ล็อกแล้ว"':''} data-slot="${k}|${r.id}|${s.id}">${it&&it.lock?'🔒 ':''}${esc(s.name)}${it?' ✓':''}${n?` <small>+${n} แบบ</small>`:''}</button>`; }).join('')}</div>`).join('');
 }
-const pickNote=t=>`<div class="lg">จุดที่ว่าง = ตัวหลัก · จุดที่มีแล้ว = ตัวสำรอง · กดซ้ำเพื่อเอาออก${t.uc?'<br>⚠ '+UCL[t.uc]+' ตรวจกับร้านก่อนใช้':t.u==='wall'?'<br>⚠ รุ่นนี้เป็นกระเบื้องผนัง ไม่ควรปูพื้น':''}</div>`;
+const pickNote=t=>`<div class="lg">เลือกได้หลายจุด และหลายแบบในจุดเดียว — ทุกแบบคิดเป็นรายการสั่งซื้อ · กดซ้ำเพื่อเอาออก${t.uc?'<br>⚠ '+UCL[t.uc]+' ตรวจกับร้านก่อนใช้':t.u==='wall'?'<br>⚠ รุ่นนี้เป็นกระเบื้องผนัง ไม่ควรปูพื้น':''}</div>`;
 function cardHtml(t){
   const k=key(t); const sl=slotsOf(k);
   const meta=[sizeS(t),FINL[t.f],t.pg&&PT[t.pg]].filter(Boolean).join(' · ')||useL(t);
   return `<article class="card"><div class="im zoom" data-detail="${k}"><span class="store ${t.s}"><i></i>${STORE[t.s].n}</span>${t.disc>0?`<span class="disc">−${t.disc}%</span>`:''}${imgBox(t)}<span class="noimg">ไม่มีรูป · กดดูที่หน้าร้าน</span>${t.oos||t.gone?`<span class="oos">${t.gone?'ไม่พบในหน้าร้านช่วงนี้':'สินค้าหมด'}</span>`:''}${sl.length?'<span class="sel">✓</span>':''}</div>
   <div class="cb"><div class="brand">${esc(t.b)}</div><div class="mdl" title="${esc(t.m)}">${esc(t.m)}</div><div class="meta">${esc(meta)}</div>
   <div class="price"><b>฿${fmt(t.p)}</b><small>/กล่อง</small>${t.disc>0?`<s>฿${fmt(t.o)}</s>`:''}${t.sq?`<span class="psq">≈ ฿${fmt(t.ps)}/ตร.ม.</span>`:''}</div>
+  ${availLine(t)}
   <div class="vf staff-only ${t.sv?'':'n'}">${t.sv?'✓ สเปกหน้าร้าน':'⚠ ไม่มีตารางสเปก'}${t.stk!=null?` · สต็อกเว็บ ${fmt(t.stk)}`:''} · ${esc(t.i)}</div>
   <div class="cact"><button class="add ${sl.length?'on':''}" data-pick="${k}">${sl.length?'✓ เลือกแล้ว'+(sl.length>1?' ('+sl.length+')':''):'+ เลือก'}</button><a href="${esc(t.url)}" target="_blank" rel="noopener">หน้าร้าน ↗</a></div></div>
   <div class="pick ${S.pick===k?'open':''}"><h5>ใช้ที่จุดไหน?</h5>${S.pick===k?pickRows(t)+pickNote(t):''}<div style="margin-top:8px;text-align:right"><button class="btn sm" data-closepick="1">เสร็จ</button></div></div></article>`;
@@ -592,6 +657,10 @@ function specRows(t){
   r.push(['เกรด / มาตรฐาน',[t.gr,t.tis&&'มอก. '+t.tis].filter(Boolean).map(esc).join(' · ')||null]);
   if(t.wt)r.push(['น้ำหนัก (ตามร้าน)',`${t.wt} กก.`]);
   if(t.stk!=null)r.push(['สต็อกตามหน้าเว็บร้าน',`${fmt(t.stk)} <small>· ณ ${dth(t.pd,1)}</small>`,1]);
+  const a=avail(t);
+  if(a.known&&a.central)r.push(['สต็อกสาขา',`ไทวัสดุแสดงจำนวนเท่ากันทุกสาขา — น่าจะเป็นสต็อกคลังกลาง ไม่ใช่ของที่วางในสาขา<br><small>โทรเช็กสาขาก่อนเดินทาง · ข้อมูล ณ ${BRDATE()}</small>`]);
+  else if(a.known)r.push(['สต็อกสาขา',PVO.map(p=>`<div><b style="font-weight:500">${PV[p]}</b> · ${a.by[p].length?a.by[p].map(([n,q])=>`${esc(n)} ${fmt(q)} กล่อง`).join(' · '):'<span style="color:var(--warn)">ไม่มี</span>'}</div>`).join('')+`<small>ตามหน้าเว็บร้าน ณ ${BRDATE()} · ตรวจกับสาขาก่อนไปซื้อ</small>`]);
+  else if(a.dh)r.push(['สต็อกสาขา','<small>ดูโฮมเช็กได้ที่ปุ่ม “เช็ก Stock ที่สาขา” บนหน้าสินค้า</small>']);
   return r;
 }
 function detailHtml(t){
@@ -609,13 +678,15 @@ function detailHtml(t){
 function openDetail(k){ const t=byKey.get(k); if(!t)return; S.detail=k; $('dbox').innerHTML=detailHtml(t); $('dtl').classList.add('open'); }
 function closeDetail(){ S.detail=null; $('dtl').classList.remove('open'); }
 /* ---------- board ---------- */
-function calc(s){
-  const t=s.main?byKey.get(s.main):null; if(!t)return null; const area=Number(s.area)||0; const w=Number(s.waste)||0; const r={t,area,waste:w,boxes:0,total:0,auto:false};
-  if(Number(s.bx)>0)r.boxes=Math.ceil(Number(s.bx));
-  else if(area&&t.sq){ r.boxes=Math.ceil(area*(1+w/100)/t.sq-1e-9)+(s.spare?1:0); r.auto=true; }
-  r.total=r.boxes*t.p; return r;
+function calc(it){
+  const t=it&&byKey.get(it.k); if(!t)return null; const area=Number(it.area)||0, w=Number(it.waste)||0, bx=Number(it.bx)||0;
+  const r={t,area,waste:w,base:0,extra:0,boxes:0,total:0,mode:''};
+  if(bx>0){ r.base=Math.ceil(bx-1e-9); r.boxes=Math.ceil(r.base*(1+w/100)-1e-9); r.mode='bx'; }
+  else if(area>0&&t.sq){ r.base=Math.ceil(area/t.sq-1e-9); r.boxes=Math.max(r.base,Math.ceil(area*(1+w/100)/t.sq-1e-9)); r.mode='area'; }
+  r.extra=r.boxes-r.base; if(r.boxes&&it.spare)r.boxes+=1; r.total=r.boxes*t.p; return r;
 }
-function boardCount(){ return new Set(S.rooms.flatMap(r=>r.slots.flatMap(s=>[s.main,...s.alts].filter(k=>k&&byKey.has(k))))).size; }
+const allItems=()=>S.rooms.flatMap(r=>r.slots.flatMap(s=>s.items.map(it=>[r,s,it])));
+function boardCount(){ return new Set(allItems().map(x=>x[2].k).filter(k=>byKey.has(k))).size; }
 function flagsFor(slot,t){
   const f=[]; const ty=slotType(slot.name),wet=slotWet(slot.name),out=slotOut(slot.name);
   if(t.uc)f.push(['w',UCL[t.uc]+' — ตรวจกับร้านก่อนใช้']);
@@ -635,51 +706,57 @@ function flagsFor(slot,t){
   if(!t.sq)f.push(['w','ร้านไม่ระบุ ตร.ม./กล่อง คำนวณจากพื้นที่ไม่ได้ ให้กรอกจำนวนกล่องเอง']);
   return f;
 }
-const lockReady=(s,c)=>!!(c&&c.boxes>0&&s.chk.spec&&s.chk.stock&&s.chk.sample);
-const statusOf=(s,c)=>s.lock?'l':(lockReady(s,c)?'r':'d');
+const lockReady=(it,c)=>!!(c&&c.boxes>0&&it.chk.spec&&it.chk.stock&&it.chk.sample);
+const statusOf=(it,c)=>it.lock?'l':(lockReady(it,c)?'r':'d');
 const STL={d:'',r:'พร้อมล็อก',l:'🔒 ล็อกแล้ว'};
 const specLine=t=>[t.pg&&PT[t.pg],t.f&&FINL[t.f],t.ed&&EDL[t.ed],t.th&&t.th+' มม.',t.sk&&(t.sk==='anti'?'กันลื่น':'กันลื่น '+t.sk),t.sh&&'Shade '+t.sh,t.bo&&BOL[t.bo]].filter(Boolean).join(' · ');
+const boxLine=(c,t,it)=>{ if(!c.boxes)return '<span>ยังไม่ระบุพื้นที่หรือจำนวนกล่อง</span>';
+  const parts=`ใช้จริง ${fmt(c.base)} + เผื่อ ${c.waste}% ${fmt(c.extra)}${it.spare?' + สำรอง 1':''} = <b>${fmt(c.boxes)} กล่อง</b>`;
+  return `${parts}<br>฿${fmt(t.p)}/กล่อง × ${fmt(c.boxes)} กล่อง = <b>฿${fmt(c.total)}</b>${c.mode==='area'&&t.sq?`<br><span>พื้นที่ ${c.area} ตร.ม. ÷ ${t.sq} ตร.ม./กล่อง = ${(c.area/t.sq).toFixed(2)} → ใช้จริง ${fmt(c.base)} กล่อง · รวมเผื่อแล้วได้ ${(c.boxes*t.sq).toFixed(2)} ตร.ม.</span>`:''}`; };
+function itemHtml(r,s,it,i){
+  const c=calc(it),t=c&&c.t; if(!t)return '';
+  const lk=!!it.lock,dis=lk?'disabled':'',id=`${r.id}|${s.id}|${it.k}`,st=statusOf(it,c),fk=s.id+it.k;
+  const fl=flagsFor(s,t).map(([l,x])=>`<div class="fl ${l==='i'?'i staff-only':''}">${esc(x)}</div>`).join('');
+  const wsel=`<label class="staff-only">เผื่อเศษ <select data-waste="${id}" ${dis}>${(WASTE.some(x=>x[0]===Number(it.waste))?WASTE:WASTE.concat([[Number(it.waste),it.waste+'%']])).map(([v,l])=>`<option value="${v}" ${Number(it.waste)===v?'selected':''}>${l}</option>`).join('')}</select></label><span class="wfix cust-only">เผื่อเศษตัด ${esc(it.waste)}%</span>`;
+  return `<div class="it ${i?'':'first'} ${lk?'locked':''}"><div class="ith"><span>แบบที่ ${i+1}${st!=='d'?` <span class="st ${st}">${STL[st]}</span>`:''}</span>${lk?'':`<button data-rmitem="${id}" style="border:0;background:none;color:var(--mute);font-size:12px">เอาออก</button>`}</div>
+    <div class="mainrow"><div class="im zoom" data-detail="${key(t)}">${imgBox(t)}</div><div class="mi"><div class="b">${STORE[t.s].n} · ${esc(t.b)}</div><div class="m">${esc(t.m)}</div><div class="s">${esc([sizeS(t),FINL[t.f],t.pg&&PT[t.pg]].filter(Boolean).join(' · '))}</div><div class="p">฿${fmt(t.p)} <small>/กล่อง${t.sq?` · ${t.sq} ตร.ม./กล่อง`:''}</small></div>
+      <div class="calc"><label>พื้นที่ <input type="number" min="0" step="0.5" value="${esc(it.area)}" data-fid="a${fk}" data-area="${id}" placeholder="ตร.ม." ${dis}> ตร.ม.</label>
+        <span class="lb">หรือ</span><label><input type="number" min="0" step="1" value="${esc(it.bx)}" data-fid="b${fk}" data-bx="${id}" placeholder="กล่อง" ${dis}> กล่องที่ใช้จริง</label></div>
+      <div class="calc">${wsel}<label class="staff-only" style="display:flex;gap:4px;align-items:center"><input type="checkbox" data-spare="${id}" ${it.spare?'checked':''} ${dis}> +1 กล่องสำรอง</label>
+        <span class="hint">${Number(it.bx)>0?'คิดจากจำนวนกล่องที่ใส่ + เผื่อเศษ':c.mode==='area'?'คิดจากพื้นที่ + เผื่อเศษ':t.sq?'ใส่พื้นที่ หรือจำนวนกล่องที่ใช้จริง':'ร้านไม่ระบุ ตร.ม./กล่อง — ใส่จำนวนกล่องที่ใช้จริง'}</span></div>
+      <div class="line">${lk?`ล็อกไว้ ${fmt(it.lock.boxes)} กล่อง × ฿${fmt(it.lock.p)} = <b>฿${fmt(it.lock.total)}</b>`:boxLine(c,t,it)}</div>
+      ${availLine(t,lk?it.lock.boxes:c.boxes)}
+      <div class="lnks"><a href="${esc(t.url)}" target="_blank" rel="noopener">หน้าร้าน ↗</a><button data-detail="${key(t)}">รายละเอียด</button></div></div></div>
+    <div class="flags">${fl}</div>
+    ${lk?`<div class="lockbox"><div class="lockstamp">🔒 ล็อกแล้ว · ${esc(it.lock.at)}${it.lock.by?' · ผู้อนุมัติ '+esc(it.lock.by):''}<small>${esc(it.lock.m).slice(0,70)} · รหัส ${esc(it.lock.sku)} · ${it.lock.boxes} กล่อง · ฿${fmt(it.lock.p)}/กล่อง (ราคา ณ วันที่ล็อก) · รวม ฿${fmt(it.lock.total)}</small></div><div class="staff-only" style="margin-top:8px"><button class="btn sm bad" data-unlock="${id}">ปลดล็อก</button></div></div>`
+    :`<div class="lockbox staff-only"><div class="ck"><label><input type="checkbox" data-chk="spec|${id}" ${it.chk.spec?'checked':''}> ตรวจสเปกกับหน้าร้านแล้ว</label><label><input type="checkbox" data-chk="stock|${id}" ${it.chk.stock?'checked':''}> ยืนยันสต็อก ล็อตเดียวกัน และราคา ณ วันสั่ง</label><label><input type="checkbox" data-chk="sample|${id}" ${it.chk.sample?'checked':''}> ลูกค้าดูตัวอย่างจริงและอนุมัติแล้ว</label></div>
+    <button class="btn sm pri" data-lock="${id}" ${lockReady(it,c)?'':'disabled'}>🔒 ล็อกรายการนี้</button> <span class="lg">${lockReady(it,c)?'':'ต้องมีจำนวนกล่องและติ๊กครบ 3 ข้อ'}</span></div>`}</div>`;
+}
 function slotHtml(r,s){
-  const c=calc(s),t=c&&c.t,st=statusOf(s,c),lk=!!s.lock,dis=lk?'disabled':'',id=`${r.id}|${s.id}`;
-  let body;
-  if(t){
-    const fl=flagsFor(s,t).map(([l,x])=>`<div class="fl ${l==='i'?'i staff-only':''}">${esc(x)}</div>`).join('');
-    body=`<div class="mainrow"><div class="im zoom" data-detail="${key(t)}">${imgBox(t)}</div><div class="mi"><div class="b">${STORE[t.s].n} · ${esc(t.b)}</div><div class="m">${esc(t.m)}</div><div class="s">${esc([sizeS(t),FINL[t.f],t.pg&&PT[t.pg]].filter(Boolean).join(' · '))}</div><div class="p">฿${fmt(t.p)} <small>/กล่อง${t.sq?` · ${t.sq} ตร.ม.`:''}</small></div>
-      <div class="calc"><label>พื้นที่ <input type="number" min="0" step="0.5" value="${esc(s.area)}" data-fid="a${s.id}" data-area="${id}" placeholder="ตร.ม." ${dis}> ตร.ม.</label>
-        <label>เผื่อเศษ <select data-waste="${id}" ${dis}>${WASTE.map(([v,l])=>`<option value="${v}" ${Number(s.waste)===v?'selected':''}>${l}</option>`).join('')}</select></label></div>
-      <div class="calc"><label>จำนวน <input type="number" min="0" step="1" value="${esc(s.bx)}" data-fid="b${s.id}" data-bx="${id}" placeholder="${c.auto&&c.boxes?c.boxes:'กล่อง'}" ${dis}> กล่อง</label>
-        <span class="hint">${Number(s.bx)>0?'กำหนดจำนวนเอง':c.auto?'คำนวณจากพื้นที่ (ลบเลขในช่องนี้เพื่อใช้ค่าคำนวณ)':t.sq?'ใส่พื้นที่หรือจำนวนกล่อง':'ร้านไม่ระบุ ตร.ม./กล่อง — ใส่จำนวนกล่อง'}</span>
-        <label class="staff-only" style="display:flex;gap:4px;align-items:center"><input type="checkbox" data-spare="${id}" ${s.spare?'checked':''} ${dis}> +1 กล่องสำรอง</label></div>
-      <div class="line">${c.boxes?`฿${fmt(t.p)}/กล่อง × <b>${c.boxes} กล่อง</b> = <b>฿${fmt(c.total)}</b>${c.auto&&c.area?` <span>· พื้นที่ ${c.area} ตร.ม. + ${c.waste}%${s.spare?' + 1 กล่องสำรอง':''} ≈ ${t.sq?(c.boxes*t.sq).toFixed(2):'-'} ตร.ม.</span>`:''}`:'<span>ยังไม่ระบุจำนวนกล่อง</span>'}</div>
-      <div class="lnks"><a href="${esc(t.url)}" target="_blank" rel="noopener">หน้าร้าน ↗</a><button data-detail="${key(t)}">รายละเอียด</button>${lk?'':`<button data-unmain="${id}">เอาออก</button>`}</div></div></div>
-      <div class="flags">${fl}</div>
-      <input class="note-in" placeholder="หมายเหตุ เช่น ปูแนวตั้ง / ร่องยาแนว 2 มม." value="${esc(s.note)}" data-fid="n${s.id}" data-note="${id}" ${dis}>
-      ${lk?`<div class="lockbox"><div class="lockstamp">🔒 ล็อกแล้ว · ${esc(s.lock.at)}${s.lock.by?' · ผู้อนุมัติ '+esc(s.lock.by):''}<small>${esc(s.lock.m).slice(0,70)} · รหัส ${esc(s.lock.sku)} · ${s.lock.boxes} กล่อง · ฿${fmt(s.lock.p)}/กล่อง (ราคา ณ วันที่ล็อก) · รวม ฿${fmt(s.lock.total)}</small></div><div class="staff-only" style="margin-top:8px"><button class="btn sm bad" data-unlock="${id}">ปลดล็อก</button></div></div>`
-      :`<div class="lockbox staff-only"><div class="ck"><label><input type="checkbox" data-chk="spec|${id}" ${s.chk.spec?'checked':''}> ตรวจสเปกกับหน้าร้านแล้ว</label><label><input type="checkbox" data-chk="stock|${id}" ${s.chk.stock?'checked':''}> ยืนยันสต็อก ล็อตเดียวกัน และราคา ณ วันสั่ง</label><label><input type="checkbox" data-chk="sample|${id}" ${s.chk.sample?'checked':''}> ลูกค้าดูตัวอย่างจริงและอนุมัติแล้ว</label></div>
-      <button class="btn sm pri" data-lock="${id}" ${lockReady(s,c)?'':'disabled'}>🔒 ล็อกรายการนี้</button> <span class="lg">${lockReady(s,c)?'':'ต้องมีจำนวนกล่องและติ๊กครบ 3 ข้อ'}</span></div>`}`;
-  } else body=`<div class="empt">ยังไม่ได้เลือก — กด “+ เลือก” ที่กระเบื้องที่ชอบ</div>`;
-  const alts=s.alts.filter(k=>byKey.has(k));
-  const ah=alts.length?`<div class="alts"><div class="lb">ตัวเลือกสำรอง</div>${alts.map(k=>{ const a=byKey.get(k); return `<div class="alt"><div class="im zoom" data-detail="${k}">${imgBox(a)}</div><div class="nm">${esc(a.m).slice(0,40)}</div><div class="pp">฿${fmt(a.p)}</div>${lk?'':`<div class="ac"><button data-promote="${id}|${k}">ใช้ตัวนี้</button><button data-rmalt="${id}|${k}">ลบ</button></div>`}</div>`; }).join('')}</div>`:'';
-  return `<div class="slot ${lk?'locked':''}"><div class="sloth"><b><i>${slotType(s.name)==='wall'?'WALL':'FLOOR'}</i>${esc(s.name)}<span class="st ${st}">${STL[st]}</span></b>${lk?'':`<button data-rmslot="${id}">ลบ</button>`}</div>${body}${ah}</div>`;
+  const its=s.items.filter(it=>byKey.has(it.k)), id=`${r.id}|${s.id}`, anyLk=its.some(it=>it.lock);
+  const tag=`<i>${slotType(s.name)==='wall'?'WALL':'FLOOR'}</i>`;
+  if(!its.length)return `<div class="slot emp"><div class="sloth"><b>${tag}${esc(s.name)}</b></div><span class="eh">ยังไม่ได้เลือก</span><button data-rmslot="${id}" style="border:0;background:none;color:var(--mute);font-size:12px">ลบ</button></div>`;
+  return `<div class="slot"><div class="sloth"><b>${tag}${esc(s.name)}${its.length>1?` <span style="font-weight:300;color:var(--mute)">· ${its.length} แบบ</span>`:''}</b>${anyLk?'':`<button data-rmslot="${id}">ลบจุดนี้</button>`}</div>${its.map((it,i)=>itemHtml(r,s,it,i)).join('')}
+    <input class="note-in" placeholder="หมายเหตุจุดนี้ เช่น ปูแนวตั้ง / ร่องยาแนว 2 มม." value="${esc(s.note)}" data-fid="n${s.id}" data-note="${id}"></div>`;
 }
 function orderLines(){
   const by={};
-  S.rooms.forEach(r=>r.slots.forEach(s=>{ const c=calc(s); if(!c)return; const t=c.t, lk=s.lock; const p=lk?lk.p:t.p, box=lk?lk.boxes:c.boxes;
+  allItems().forEach(([r,s,it])=>{ const c=calc(it); if(!c)return; const t=c.t, lk=it.lock; const p=lk?lk.p:t.p, box=lk?lk.boxes:c.boxes;
     const m=(by[t.s]=by[t.s]||new Map()); const k=key(t)+'|'+p; let L=m.get(k);
     if(!L){ L={t,p,boxes:0,uses:[],missing:false,locked:true,area:0}; m.set(k,L); }
-    L.uses.push(`${r.name} · ${s.name}${box?` (${box} กล่อง)`:''}`); if(box)L.boxes+=box; else L.missing=true; if(!lk)L.locked=false; }));
+    L.uses.push(`${r.name} · ${s.name}${box?` (${box} กล่อง)`:''}`); if(box)L.boxes+=box; else L.missing=true; if(!lk)L.locked=false; });
   return ['tw','hp','dh'].filter(x=>by[x]).map(x=>{ const lines=[...by[x].values()]; lines.forEach(L=>L.total=L.boxes*L.p); return {s:x,lines,total:lines.reduce((a,L)=>a+L.total,0)}; });
 }
 function renderBoard(){
   let grand=0,locked=0,mains=0;
   $('rooms').innerHTML=S.rooms.map(r=>{
     let sub=0;
-    const slots=r.slots.map(s=>{ const c=calc(s); if(c){mains++; sub+=s.lock?s.lock.total:c.total; if(s.lock)locked++;} return slotHtml(r,s); }).join('');
+    const slots=r.slots.map(s=>{ s.items.forEach(it=>{ const c=calc(it); if(c){mains++; sub+=it.lock?it.lock.total:c.total; if(it.lock)locked++;} }); return slotHtml(r,s); }).join('');
     return `<div class="room"><div class="rhd"><h3>${esc(r.name)}</h3><span>${sub?'฿'+fmt(sub):''}</span><button data-rmroom="${r.id}">ลบห้อง</button></div>${slots}<div class="addrow"><select id="ps-${r.id}">${SLOT_PRESETS.map(p=>`<option>${p}</option>`).join('')}</select><button class="btn sm ghost" data-addslot="${r.id}">+ เพิ่มจุดติดตั้ง</button></div></div>`;
   }).join('');
   const G=orderLines(); grand=G.reduce((a,g)=>a+g.total,0); const miss=G.some(g=>g.lines.some(L=>L.missing));
-  $('orders').innerHTML=G.length?`<div class="orders"><h3>สรุปสั่งซื้อแยกตามร้าน</h3>${G.map(g=>`<div class="ostore"><h4><span><i style="background:${STORE[g.s].c}"></i>${STORE[g.s].n} · ${g.lines.length} รายการ</span><span>฿${fmt(g.total)}</span></h4><table class="otbl"><tr><th>สินค้า</th><th class="hm">รหัส</th><th class="hm">ใช้ที่</th><th class="r">฿/กล่อง</th><th class="r">กล่อง</th><th class="r">รวม ฿</th></tr>${g.lines.map(L=>`<tr><td>${esc(L.t.b)} · ${esc(L.t.m)}<br><small>${esc(sizeS(L.t))}</small></td><td class="hm">${esc(L.t.i)}</td><td class="hm"><small>${L.uses.map(esc).join('<br>')}</small></td><td class="r">${fmt(L.p)}</td><td class="r">${L.boxes||'–'}${L.missing?'<br><small>ยังไม่ครบ</small>':''}</td><td class="r">${L.total?fmt(L.total):'–'}</td></tr>`).join('')}<tr class="sub"><td colspan="3" class="hm"></td><td colspan="2" class="r">รวม ${STORE[g.s].n}</td><td class="r">฿${fmt(g.total)}</td></tr></table></div>`).join('')}</div>`:'';
-  $('grand').innerHTML=`งบกระเบื้องเบื้องต้น<b>฿${fmt(grand)}</b>${miss?'<div style="color:var(--warn)">บางจุดยังไม่ระบุจำนวนกล่อง ยอดนี้จึงยังไม่ครบ</div>':''}<div>${mains?`<span class="staff-only">ล็อกแล้ว ${locked}/${mains} จุด · </span>`:''}รวมทุกร้าน · ราคาตามหน้าร้าน ณ ${META.date} · ไม่รวมปูนกาว ยาแนว ค่าแรง ค่าขนส่ง</div>`;
+  $('orders').innerHTML=G.length?`<div class="orders"><h3>สรุปสั่งซื้อแยกตามร้าน</h3>${G.map(g=>`<div class="ostore"><h4><span><i style="background:${STORE[g.s].c}"></i>${STORE[g.s].n} · ${g.lines.length} รายการ</span><span>฿${fmt(g.total)}</span></h4><table class="otbl"><tr><th>สินค้า</th><th class="hm">รหัส</th><th class="hm">ใช้ที่</th><th class="r">฿/กล่อง</th><th class="r">กล่อง</th><th class="r">รวม ฿</th></tr>${g.lines.map(L=>`<tr><td>${esc(L.t.b)} · ${esc(L.t.m)}<br><small>${esc(sizeS(L.t))}</small>${availLine(L.t,L.boxes)}</td><td class="hm">${esc(L.t.i)}</td><td class="hm"><small>${L.uses.map(esc).join('<br>')}</small></td><td class="r">${fmt(L.p)}</td><td class="r">${L.boxes||'–'}${L.missing?'<br><small>ยังไม่ครบ</small>':''}</td><td class="r">${L.total?fmt(L.total):'–'}</td></tr>`).join('')}<tr class="sub"><td colspan="3" class="hm"></td><td colspan="2" class="r">รวม ${STORE[g.s].n}</td><td class="r">฿${fmt(g.total)}</td></tr></table></div>`).join('')}</div>`:'';
+  $('grand').innerHTML=`งบกระเบื้องเบื้องต้น<b>฿${fmt(grand)}</b>${miss?'<div style="color:var(--warn)">บางจุดยังไม่ระบุจำนวนกล่อง ยอดนี้จึงยังไม่ครบ</div>':''}<div>${mains?`<span class="staff-only">ล็อกแล้ว ${locked}/${mains} จุด · </span>`:''}รวมทุกร้าน · ราคาตามหน้าร้าน ณ ${META.date} · จำนวนกล่องรวมเผื่อเศษตัดแล้ว · ไม่รวมปูนกาว ยาแนว ค่าแรง ค่าขนส่ง</div>`;
 }
 function updCnt(){ const n=boardCount(); $('navCnt').textContent=n; $('fabCnt').textContent=n; $('fab').style.display=(n&&S.view==='browse')?'flex':'none'; }
 function setView(v){ S.view=v; S.pop=null; $('ctl').style.display=v==='browse'?'':'none'; $('browse').style.display=v==='browse'?'':'none'; $('board').classList.toggle('open',v==='board'); $('navBrowse').classList.toggle('on',v==='browse'); $('navBoard').classList.toggle('on',v==='board'); if(v==='board')renderBoard(); else refreshAll(); updCnt(); window.scrollTo(0,0); }
@@ -693,11 +770,12 @@ function copyText(txt,btn){ const ok=()=>{ if(btn){const o=btn.textContent; btn.
 function toggle(set,v){ S[set].has(v)?S[set].delete(v):S[set].add(v); }
 function afterSlotChange(){ persist(); renderGrid(); updCnt(); if(S.view==='board')renderBoard(); if(S.detail){ const sc=$('dtl').scrollTop; openDetail(S.detail); $('dtl').scrollTop=sc; } }
 const resetChk=s=>{ s.chk={spec:false,stock:false,sample:false}; };
+function itemRef(str){ const [rid,sid,k]=str.split('|'); const [r,s]=slotRef(rid+'|'+sid); return [r,s,s&&s.items.find(i=>i.k===k)]; }
 document.addEventListener('click',ev=>{
   if(ev.target.id==='dtl'){closeDetail();return;}
   if(ev.target.id==='reset'){ S.store='all';SETS.forEach(g=>S[g].clear());S.q='';$('q').value='';S.verOnly=false;refreshFilters();return; }
   if(ev.target.id==='more'){S.shown+=48;renderGrid();return;}
-  const T=ev.target.closest('[data-band],[data-over],[data-mode],[data-pop],[data-f],[data-x],[data-store],[data-pick],[data-slot],[data-closepick],[data-unmain],[data-promote],[data-rmalt],[data-rmslot],[data-rmroom],[data-addslot],[data-detail],[data-closedtl],[data-copy],[data-lock],[data-unlock]');
+  const T=ev.target.closest('[data-band],[data-over],[data-mode],[data-pop],[data-f],[data-x],[data-store],[data-pick],[data-slot],[data-closepick],[data-rmitem],[data-rmslot],[data-rmroom],[data-addslot],[data-detail],[data-closedtl],[data-copy],[data-lock],[data-unlock]');
   if(!T){ let ch=false; if(S.pick&&!ev.target.closest('.pick')){S.pick=null;ch=true;renderGrid();} if(S.pop&&!ev.target.closest('#pop')){S.pop=null;renderBar();renderPop();} return; }
   const d=T.dataset;
   if(d.pop){S.pop=S.pop===d.pop?null:d.pop;renderBar();renderPop();return;}
@@ -713,25 +791,23 @@ document.addEventListener('click',ev=>{
   if(d.copy){copyText(d.copy,T);return;}
   if(d.pick){S.pick=S.pick===d.pick?null:d.pick;renderGrid();return;}
   if(d.closepick){S.pick=null;renderGrid();return;}
-  if(d.slot){const [k,rid,sid]=d.slot.split('|');const [,s]=slotRef(rid+'|'+sid); if(!s||s.lock)return;
-    if(s.main===k){s.main=s.alts.shift()||null;resetChk(s);} else if(s.alts.includes(k)){s.alts=s.alts.filter(x=>x!==k);} else if(!s.main){s.main=k;resetChk(s);} else s.alts.push(k);
+  if(d.slot){const [k,rid,sid]=d.slot.split('|');const [,s]=slotRef(rid+'|'+sid); if(!s)return; const it=s.items.find(i=>i.k===k);
+    if(it){ if(it.lock)return; s.items=s.items.filter(i=>i!==it); } else s.items.push(newItem(k));
     afterSlotChange();return;}
-  if(d.unmain){const [,s]=slotRef(d.unmain);s.main=s.alts.shift()||null;resetChk(s);afterSlotChange();return;}
-  if(d.promote){const [rid,sid,k]=d.promote.split('|');const [,s]=slotRef(rid+'|'+sid);s.alts=s.alts.filter(x=>x!==k);if(s.main)s.alts.unshift(s.main);s.main=k;resetChk(s);afterSlotChange();return;}
-  if(d.rmalt){const [rid,sid,k]=d.rmalt.split('|');const [,s]=slotRef(rid+'|'+sid);s.alts=s.alts.filter(x=>x!==k);afterSlotChange();return;}
-  if(d.rmslot){const [r,s]=slotRef(d.rmslot);r.slots=r.slots.filter(x=>x!==s);afterSlotChange();return;}
-  if(d.rmroom){const r=S.rooms.find(x=>x.id===d.rmroom); if(r&&r.slots.some(s=>s.lock)){dlg('ลบห้องไม่ได้','ห้องนี้มีรายการที่ล็อกแล้ว ปลดล็อกก่อนจึงลบได้');return;} S.rooms=S.rooms.filter(x=>x.id!==d.rmroom);afterSlotChange();return;}
+  if(d.rmitem){const [,s,it]=itemRef(d.rmitem); if(!it||it.lock)return; s.items=s.items.filter(i=>i!==it); afterSlotChange();return;}
+  if(d.rmslot){const [r,s]=slotRef(d.rmslot); if(s.items.some(i=>i.lock)){dlg('ลบจุดนี้ไม่ได้','จุดนี้มีรายการที่ล็อกแล้ว ปลดล็อกก่อนจึงลบได้');return;} const go=()=>{r.slots=r.slots.filter(x=>x!==s);afterSlotChange();}; if(s.items.length)dlg('ลบจุดติดตั้งนี้?',`“${esc(s.name)}” มีกระเบื้อง ${s.items.length} แบบ จะถูกเอาออกด้วย`,[['ยกเลิก',null],['ลบ',go,true]]); else go(); return;}
+  if(d.rmroom){const r=S.rooms.find(x=>x.id===d.rmroom); if(r&&r.slots.some(s=>s.items.some(i=>i.lock))){dlg('ลบห้องไม่ได้','ห้องนี้มีรายการที่ล็อกแล้ว ปลดล็อกก่อนจึงลบได้');return;} S.rooms=S.rooms.filter(x=>x.id!==d.rmroom);afterSlotChange();return;}
   if(d.addslot){const r=S.rooms.find(x=>x.id===d.addslot);r.slots.push(newSlot($('ps-'+r.id).value));afterSlotChange();return;}
-  if(d.lock){const [,s]=slotRef(d.lock);const c=calc(s); if(!lockReady(s,c))return; const t=c.t;
-    s.lock={at:todayTh(),by:$('approver').value.trim(),k:key(t),sku:t.i,b:t.b,m:t.m,store:t.s,p:t.p,boxes:c.boxes,total:c.total,area:c.area,waste:c.waste,url:t.url};
+  if(d.lock){const [,,it]=itemRef(d.lock);const c=calc(it); if(!lockReady(it,c))return; const t=c.t;
+    it.lock={at:todayTh(),by:$('approver').value.trim(),k:key(t),sku:t.i,b:t.b,m:t.m,store:t.s,p:t.p,boxes:c.boxes,total:c.total,area:c.area,waste:c.waste,url:t.url};
     afterSlotChange();return;}
-  if(d.unlock){const [,s]=slotRef(d.unlock); dlg('ปลดล็อกรายการนี้?','ปลดล็อกแล้วจะแก้ไขได้ และต้องตรวจสอบแล้วล็อกใหม่',[['ยกเลิก',null],['ปลดล็อก',()=>{s.lock=null;resetChk(s);afterSlotChange();},true]]); return;}
+  if(d.unlock){const [,,it]=itemRef(d.unlock); dlg('ปลดล็อกรายการนี้?','ปลดล็อกแล้วจะแก้ไขได้ และต้องตรวจสอบแล้วล็อกใหม่',[['ยกเลิก',null],['ปลดล็อก',()=>{it.lock=null;resetChk(it);afterSlotChange();},true]]); return;}
 });
 document.addEventListener('input',ev=>{
   const e=ev.target; const dd=e.dataset||{};
   const keep=()=>{ const f=e.dataset.fid; const pos=e.selectionStart; renderBoard(); const n=f&&document.querySelector(`[data-fid="${f}"]`); if(n){n.focus();try{n.setSelectionRange(pos,pos);}catch(_){}} };
-  if(dd.area){const [,s]=slotRef(dd.area);s.area=e.value;persist();keep();return;}
-  if(dd.bx){const [,s]=slotRef(dd.bx);s.bx=e.value;persist();keep();return;}
+  if(dd.area){const [,,it]=itemRef(dd.area);it.area=e.value;if(e.value!==''&&Number(e.value)>0)it.bx='';persist();keep();return;}
+  if(dd.bx){const [,,it]=itemRef(dd.bx);it.bx=e.value;persist();keep();return;}
   if(dd.note){const [,s]=slotRef(dd.note);s.note=e.value;persist();return;}
   if(e.id==='q'){S.q=e.value.trim();S.shown=48;renderTabs();renderBar();renderActive();renderGrid();return;}
   if(['client','designer','approver'].includes(e.id))persist();
@@ -741,26 +817,47 @@ document.addEventListener('change',ev=>{
   if(e.id==='sort'){S.sort=e.value;renderGrid();}
   if(e.id==='hideOos'){S.hideOos=e.checked;refreshFilters();}
   if(e.id==='verOnly'){S.verOnly=e.checked;refreshFilters();}
-  if(dd.waste){const [,s]=slotRef(dd.waste);s.waste=+e.value;persist();renderBoard();}
-  if(dd.spare){const [,s]=slotRef(dd.spare);s.spare=e.checked;persist();renderBoard();}
-  if(dd.chk){const [k,rid,sid]=dd.chk.split('|');const [,s]=slotRef(rid+'|'+sid);s.chk[k]=e.checked;persist();renderBoard();}
+  if(dd.waste){ if(!S.staff)return; const [,,it]=itemRef(dd.waste);it.waste=+e.value;persist();renderBoard();}
+  if(dd.spare){ if(!S.staff)return; const [,,it]=itemRef(dd.spare);it.spare=e.checked;persist();renderBoard();}
+  if(dd.chk){const i=dd.chk.indexOf('|');const [,,it]=itemRef(dd.chk.slice(i+1));it.chk[dd.chk.slice(0,i)]=e.checked;persist();renderBoard();}
+  if(e.id==='prov'||e.id==='prov2'){ S.prov=e.value; persist(); renderProv(); if(S.view==='board')renderBoard(); else refreshFilters(); }
+  if(e.id==='provOnly'){ S.provOnly=e.checked; persist(); refreshFilters(); }
 });
 document.addEventListener('keydown',ev=>{ if(ev.key==='Escape'){ if(S.detail)closeDetail(); else if(S.pop){S.pop=null;renderBar();renderPop();} } });
 $('navBrowse').onclick=()=>setView('browse'); $('navBoard').onclick=()=>setView('board'); $('fab').onclick=()=>setView('board');
-$('staffToggle').onclick=()=>{ S.staff=!S.staff; applyStaff(); if(S.view==='board')renderBoard(); else refreshAll(); };
+$('staffToggle').onclick=()=>{ S.staff=false; applyStaff(); if(S.view==='board')renderBoard(); else refreshAll(); };
+async function sha(s){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+function askPin(){
+  if(!(window.crypto&&crypto.subtle)){ dlg('เข้าโหมดทีมงานไม่ได้','เบราว์เซอร์นี้ไม่รองรับการตรวจรหัส เปิดลิงก์ผ่าน https ใน Chrome / Edge / Safari'); return; }
+  dlg('โหมดทีมงาน','<label class="fld">ใส่รหัส PIN ทีมงาน<input class="pin" id="pinIn" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></label><div id="pinMsg" style="color:var(--bad);font-size:12px;margin-top:6px"></div>',[['ยกเลิก',null],['เข้าสู่โหมดทีมงาน',async()=>{ const v=($('pinIn').value||'').trim(); if(await sha('pndx-staff:'+v)===STAFF_H){ $('dlg').classList.remove('open'); S.staff=true; applyStaff(); if(S.view==='board')renderBoard(); else refreshAll(); } else { $('pinMsg').textContent='รหัสไม่ถูกต้อง'; $('pinIn').select(); } },true,true]]);
+  setTimeout(()=>{ const p=$('pinIn'); if(p){ p.focus(); p.onkeydown=e=>{ if(e.key==='Enter')$('dlgB').lastChild.click(); }; } },50);
+}
 $('addRoom').onclick=()=>{ const v=$('newRoom').value.trim(); if(!v)return; S.rooms.push({id:nid(),name:v,slots:[newSlot('พื้น'),newSlot('ผนัง')]}); $('newRoom').value=''; persist(); renderBoard(); };
 /* ---------- share link ---------- */
 const b64e=s=>btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const b64d=s=>decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/'))));
-function shareUrl(){ const o={c:$('client').value,r:S.rooms.filter(r=>r.slots.some(s=>s.main||s.alts.length)).map(r=>[r.name,r.slots.filter(s=>s.main||s.alts.length).map(s=>[s.name,s.area,s.main,s.alts,s.waste,s.spare?1:0,s.note,s.bx])])}; return location.href.split('#')[0]+'#s='+b64e(JSON.stringify(o)); }
+const baseUrl=()=>location.href.split('#')[0].split('?')[0];
+function shareUrl(){ const o={v:2,c:$('client').value,pv:S.prov,r:S.rooms.map(r=>[r.name,r.slots.map(s=>[s.name,s.note,s.items.map(it=>[it.k,it.area,it.bx,Number(it.waste),it.spare?1:0])])])}; return baseUrl()+'#s='+b64e(JSON.stringify(o)); }
+function roomsFromShare(o){
+  if(o.v===2)return normRooms(o.r.map(([n,sl])=>({name:String(n),slots:(sl||[]).map(a=>({name:String(a[0]),note:a[1]||'',items:(a[2]||[]).map(x=>({k:x[0],area:x[1]||'',bx:x[2]||'',waste:x[3]==null?DEF_WASTE:x[3],spare:!!x[4]}))}))})));
+  /* links made before v2: [slot, area, main, alts, waste, spare, note, bx] */
+  return normRooms(o.r.map(([n,sl])=>({name:String(n),slots:sl.map(a=>({name:String(a[0]),area:a[1]||'',main:a[2]||null,alts:a[3]||[],waste:a[4],spare:!!a[5],note:a[6]||'',bx:a[7]||''}))})));
+}
+const clearHash=()=>history.replaceState(null,'',baseUrl());
 function loadShared(){
-  const m=location.hash.match(/^#s=(.+)$/); if(!m)return;
+  const hs=location.hash;
+  if(/^#staff\b/.test(hs)||/[?&]staff\b/.test(location.search)){ clearHash(); if(!S.staff)askPin(); return; }
+  let m=hs.match(/^#n=(.+)$/);
+  if(m){ let o; try{ o=JSON.parse(b64d(m[1])); }catch(e){ clearHash(); return; } clearHash();
+    if(o.c)$('client').value=String(o.c).slice(0,80); if(PV[o.pv]){S.prov=o.pv;S.provOnly=true;} persist(); renderProv(); refreshFilters();
+    dlg(o.c?'สวัสดีคุณ '+esc(o.c):'ยินดีต้อนรับ',`เริ่มเลือกกระเบื้องได้เลย${S.prov?' — แสดงเฉพาะรายการที่มีใน<b>สาขา'+PV[S.prov]+'</b> (เปลี่ยนได้ที่ช่องเลือกสาขาด้านบน)':''}<br><br>รายการที่เลือกจะเก็บไว้ในเครื่องนี้เท่านั้น ถ้าจะเปิดต่อในเครื่องอื่นหรือส่งให้ทีมงาน กด <b>“บันทึกลิงก์โครงการ”</b> ที่หน้ารายการที่เลือก`); return; }
+  m=hs.match(/^#s=(.+)$/); if(!m)return;
   let o; try{ o=JSON.parse(b64d(m[1])); }catch(e){ return; }
   if(!o||!Array.isArray(o.r))return;
-  const rooms=normRooms(o.r.map(([n,sl])=>({name:String(n),slots:sl.map(a=>({name:String(a[0]),area:a[1]||'',main:a[2]||null,alts:a[3]||[],waste:a[4]==null?DEF_WASTE:a[4],spare:!!a[5],note:a[6]||'',bx:a[7]||''}))})));
-  const cnt=new Set(rooms.flatMap(r=>r.slots.flatMap(s=>[s.main,...s.alts].filter(Boolean)))).size;
-  const go=()=>{ S.rooms=rooms; if(o.c)$('client').value=o.c; persist(); history.replaceState(null,'',location.href.split('#')[0]); setView('board'); };
-  if(boardCount())dlg('เปิดรายการที่ส่งมา?',`ลิงก์นี้มีรายการกระเบื้อง ${cnt} รายการ${o.c?' ของ '+esc(o.c):''} — การเปิดจะแทนที่รายการที่เลือกไว้ในเครื่องนี้`,[['ไม่เปิด',()=>history.replaceState(null,'',location.href.split('#')[0])],['เปิดรายการ',go,true]]);
+  const rooms=roomsFromShare(o);
+  const cnt=new Set(rooms.flatMap(r=>r.slots.flatMap(s=>s.items.map(i=>i.k)))).size;
+  const go=()=>{ S.rooms=rooms; if(o.c!=null)$('client').value=o.c; if(PV[o.pv])S.prov=o.pv; persist(); renderProv(); clearHash(); setView('board'); };
+  if(boardCount())dlg('เปิดโครงการจากลิงก์?',`ลิงก์นี้มีกระเบื้อง ${cnt} รายการ${o.c?' ของ '+esc(o.c):''} — การเปิดจะแทนที่รายการที่เลือกไว้ในเครื่องนี้ (ถ้าต้องการเก็บรายการเดิม ให้กด “บันทึกลิงก์โครงการ” ของรายการเดิมไว้ก่อน)`,[['ไม่เปิด',clearHash],['เปิดโครงการ',go,true]]);
   else go();
 }
 /* ---------- documents (print + PDF) ---------- */
@@ -773,19 +870,18 @@ function buildView(){
 }
 function buildSel(){
   const client=$('client').value.trim(),designer=$('designer').value.trim(),appr=$('approver').value.trim(); const date=META.date;
-  const used=S.rooms.filter(r=>r.slots.some(s=>s.main&&byKey.has(s.main)));
-  let h=`<div class="slide"><div class="cover"><img src="${LOGO}" alt=""><div style="letter-spacing:.3em;font-size:12px;color:#6f6e6a">TILE SELECTION</div><h2>Material<br>Specification</h2>${client?`<p>ลูกค้า / โครงการ: <b style="color:#26262a;font-weight:400">${esc(client)}</b></p>`:''}${designer?`<p>จัดทำโดย ${esc(designer)}</p>`:''}<p>ราคาตามหน้าร้าน ณ ${date} · ไทวัสดุ · โฮมโปร · ดูโฮม</p><p>${used.length} ห้อง · ${boardCount()} รายการกระเบื้อง</p></div></div>`;
-  const rows=[]; let grand=0;
-  used.forEach(r=>{ const sl=r.slots.filter(s=>s.main&&byKey.has(s.main)); chunk(sl,4).forEach((c,i)=>{ h+=`<div class="slide">${shead(esc(r.name)+(i?' (ต่อ)':''),(client?esc(client)+' · ':'')+date)}<div class="rs">${c.map(s=>{ const t=byKey.get(s.main); const k=calc(s); if(k&&k.total)grand+=k.total; rows.push({r:r.name,s,t,k}); const alts=s.alts.map(x=>byKey.get(x)).filter(Boolean).slice(0,4);
-      return `<div class="rsl ${s.lock?'lk':''}"><div class="lb"><span>${esc(s.name)}</span>${s.lock?`<u>ล็อกแล้ว ${esc(s.lock.at)}</u>`:''}</div><div class="mr"><div class="im">${imgBox(t,1)}</div><div class="tx"><div style="font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#6f6e6a">${STORE[t.s].n} · ${esc(t.b)}</div><div class="m">${esc(t.m)}</div><div style="font-size:9.5px;color:#6f6e6a">${sizeP(t)}</div><div class="p">฿${fmt(t.p)} <span style="font-size:10px;font-family:Prompt;color:#6f6e6a">/กล่อง</span></div>${k&&k.boxes?`<div style="font-size:10px"><b style="font-weight:500">${k.boxes} กล่อง</b> ≈ ฿${fmt(k.total)}${k.area?` · ${k.area} ตร.ม.`:''}</div>`:''}</div></div><div class="sp">รหัส ${esc(t.i)} · ${esc(specLine(t)||'ร้านไม่ระบุสเปก')}${s.note?'<br>หมายเหตุ: '+esc(s.note):''}</div>${alts.length?`<div class="al"><div class="lb2">ตัวเลือกสำรอง</div></div><div class="al">${alts.map(a=>`<div><div class="im">${imgBox(a,1)}</div><div style="margin-top:1mm">${esc(a.b)} ${esc(a.m).slice(0,22)}</div><b style="font-weight:500">฿${fmt(a.p)}</b></div>`).join('')}</div>`:''}</div>`; }).join('')}</div></div>`; }); });
+  const used=S.rooms.filter(r=>r.slots.some(s=>s.items.some(it=>byKey.has(it.k))));
+  let h=`<div class="slide"><div class="cover"><img src="${LOGO}" alt=""><div style="letter-spacing:.3em;font-size:12px;color:#6f6e6a">TILE SELECTION</div><h2>Material<br>Specification</h2>${client?`<p>ลูกค้า / โครงการ: <b style="color:#26262a;font-weight:400">${esc(client)}</b></p>`:''}${S.prov?`<p>สาขาที่จะซื้อ: จังหวัด${PV[S.prov]}</p>`:''}${designer?`<p>จัดทำโดย ${esc(designer)}</p>`:''}<p>ราคาตามหน้าร้าน ณ ${date} · ไทวัสดุ · โฮมโปร · ดูโฮม</p><p>${used.length} ห้อง · ${boardCount()} รายการกระเบื้อง</p></div></div>`;
+  used.forEach(r=>{ const its=r.slots.flatMap(s=>s.items.filter(it=>byKey.has(it.k)).map((it,i,a)=>({s,it,n:a.length>1?` · แบบที่ ${i+1}`:''}))); chunk(its,4).forEach((c,i)=>{ h+=`<div class="slide">${shead(esc(r.name)+(i?' (ต่อ)':''),(client?esc(client)+' · ':'')+date)}<div class="rs">${c.map(({s,it,n})=>{ const t=byKey.get(it.k); const k=calc(it); const lk=it.lock; const bx=lk?lk.boxes:k.boxes, tot=lk?lk.total:k.total;
+      return `<div class="rsl ${lk?'lk':''}"><div class="lb"><span>${esc(s.name)}${n}</span>${lk?`<u>ล็อกแล้ว ${esc(lk.at)}</u>`:''}</div><div class="mr"><div class="im">${imgBox(t,1)}</div><div class="tx"><div style="font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#6f6e6a">${STORE[t.s].n} · ${esc(t.b)}</div><div class="m">${esc(t.m)}</div><div style="font-size:9.5px;color:#6f6e6a">${sizeP(t)}</div><div class="p">฿${fmt(lk?lk.p:t.p)} <span style="font-size:10px;font-family:Prompt;color:#6f6e6a">/กล่อง</span></div>${bx?`<div style="font-size:10px"><b style="font-weight:500">${bx} กล่อง</b> = ฿${fmt(tot)}${!lk&&k.base?`<br><span style="color:#6f6e6a">ใช้จริง ${k.base} + เผื่อ ${k.waste}% ${k.extra}${it.spare?' (รวมสำรอง 1)':''}${k.area?` · ${k.area} ตร.ม.`:''}</span>`:''}</div>`:''}</div></div><div class="sp">รหัส ${esc(t.i)} · ${esc(specLine(t)||'ร้านไม่ระบุสเปก')}${s.note?'<br>หมายเหตุ: '+esc(s.note):''}</div></div>`; }).join('')}</div></div>`; }); });
   const G=orderLines(); grand=G.reduce((x,g)=>x+g.total,0); const miss=G.some(g=>g.lines.some(L=>L.missing));
   const th=`<tr><th>สินค้า</th><th>รหัส</th><th>ใช้ที่</th><th>สเปกหลัก</th><th class="r">฿/กล่อง</th><th class="r">กล่อง</th><th class="r">รวม ฿</th>${S.staff?'<th>สถานะ</th>':''}</tr>`;
   const cols=S.staff?8:7; const items=[];
   G.forEach(g=>{ items.push({h:`<tr class="st"><td colspan="${cols}"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${STORE[g.s].c};margin-right:6px"></span>${STORE[g.s].n} · ${g.lines.length} รายการ</td></tr>`,w:1});
-    g.lines.forEach(L=>items.push({h:`<tr><td>${esc(L.t.b)}<br>${esc(L.t.m).slice(0,60)}<br><span style="color:#6f6e6a">${sizeP(L.t)}</span></td><td>${esc(L.t.i)}</td><td style="font-size:9px">${L.uses.map(esc).join('<br>')}</td><td style="font-size:9px">${esc(specLine(L.t)||'ร้านไม่ระบุ')}</td><td class="r">${fmt(L.p)}</td><td class="r">${L.boxes||'-'}${L.missing?'<br><span style="font-size:8.5px;color:#a05a00">ยังไม่ครบ</span>':''}</td><td class="r">${L.total?fmt(L.total):'-'}</td>${S.staff?`<td>${L.locked?'<b style="color:#2d7a4f;font-weight:500">ล็อกแล้ว</b>':'ยังไม่ล็อก'}</td>`:''}</tr>`,w:Math.max(1.4,L.uses.length*0.55+0.9)}));
+    g.lines.forEach(L=>items.push({h:`<tr><td>${esc(L.t.b)}<br>${esc(L.t.m).slice(0,60)}<br><span style="color:#6f6e6a">${sizeP(L.t)}</span></td><td>${esc(L.t.i)}</td><td style="font-size:9px">${L.uses.map(esc).join('<br>')}${S.prov?availTxt(L.t,L.boxes):''}</td><td style="font-size:9px">${esc(specLine(L.t)||'ร้านไม่ระบุ')}</td><td class="r">${fmt(L.p)}</td><td class="r">${L.boxes||'-'}${L.missing?'<br><span style="font-size:8.5px;color:#a05a00">ยังไม่ครบ</span>':''}</td><td class="r">${L.total?fmt(L.total):'-'}</td>${S.staff?`<td>${L.locked?'<b style="color:#2d7a4f;font-weight:500">ล็อกแล้ว</b>':'ยังไม่ล็อก'}</td>`:''}</tr>`,w:Math.max(1.4,L.uses.length*0.55+0.9)}));
     items.push({h:`<tr class="stt"><td colspan="${cols-1}" class="r">รวม ${STORE[g.s].n}</td><td class="r">${fmt(g.total)}</td></tr>`,w:0.8}); });
   const pages=[[]]; let acc=0; items.forEach(it=>{ if(acc+it.w>15&&pages[pages.length-1].length){pages.push([]);acc=0;} pages[pages.length-1].push(it.h); acc+=it.w; });
-  pages.forEach((p,i)=>{ h+=`<div class="slide">${shead((S.staff?'ใบล็อกรายการกระเบื้อง':'สรุปรายการสั่งซื้อ แยกตามร้าน')+(i?' (ต่อ)':''),(client?esc(client)+' · ':'')+date)}<table class="tbl">${th}${p.join('')}</table>${i===pages.length-1?`<div style="display:flex;justify-content:flex-end;gap:10mm;align-items:baseline;margin:5mm 0 2mm;font-size:12px;color:#55544f">${G.map(g=>`<span>${STORE[g.s].n} ฿${fmt(g.total)}</span>`).join('')}<span style="font-size:14px;color:#26262a">รวมทั้งหมด <b style="font-family:'Cormorant Garamond','Prompt',serif;font-size:30px;font-weight:600">฿${fmt(grand)}</b></span></div>${miss?'<p style="font-size:10px;color:#a05a00;text-align:right;margin:0">บางรายการยังไม่ระบุจำนวนกล่อง ยอดรวมจึงยังไม่ครบ</p>':''}<p style="font-size:9.5px;color:#6f6e6a;line-height:1.5">ราคาตามหน้าเว็บร้านค้า ณ ${date} อาจเปลี่ยนแปลง · จำนวนกล่องรวมค่าเผื่อเศษตัดตามที่ระบุแต่ละจุดแล้ว · ไม่รวมปูนกาว ยาแนว ค่าแรง ค่าขนส่ง · สั่งรุ่นเดียวกันทั้งหมดครั้งเดียวในล็อตเดียวกัน${S.staff?` · ลงนามผู้อนุมัติ: ${appr?esc(appr):'................................'}  วันที่ ........................`:''}</p>`:''}</div>`; });
+  pages.forEach((p,i)=>{ h+=`<div class="slide">${shead((S.staff?'ใบล็อกรายการกระเบื้อง':'สรุปรายการสั่งซื้อ แยกตามร้าน')+(i?' (ต่อ)':''),(client?esc(client)+' · ':'')+date)}<table class="tbl">${th}${p.join('')}</table>${i===pages.length-1?`<div style="display:flex;justify-content:flex-end;gap:10mm;align-items:baseline;margin:5mm 0 2mm;font-size:12px;color:#55544f">${G.map(g=>`<span>${STORE[g.s].n} ฿${fmt(g.total)}</span>`).join('')}<span style="font-size:14px;color:#26262a">รวมทั้งหมด <b style="font-family:'Cormorant Garamond','Prompt',serif;font-size:30px;font-weight:600">฿${fmt(grand)}</b></span></div>${miss?'<p style="font-size:10px;color:#a05a00;text-align:right;margin:0">บางรายการยังไม่ระบุจำนวนกล่อง ยอดรวมจึงยังไม่ครบ</p>':''}<p style="font-size:9.5px;color:#6f6e6a;line-height:1.5">ราคาตามหน้าเว็บร้านค้า ณ ${date} อาจเปลี่ยนแปลง · จำนวนกล่องรวมค่าเผื่อเศษตัดแล้ว (ค่าเริ่มต้น 7%)${S.prov?` · สต็อกสาขา${PV[S.prov]}ตามหน้าเว็บร้าน ณ ${BRDATE()}`:''} · ไม่รวมปูนกาว ยาแนว ค่าแรง ค่าขนส่ง · สั่งรุ่นเดียวกันทั้งหมดครั้งเดียวในล็อตเดียวกัน${S.staff?` · ลงนามผู้อนุมัติ: ${appr?esc(appr):'................................'}  วันที่ ........................`:''}</p>`:''}</div>`; });
   return h;
 }
 function waitImages(root){ const imgs=[...root.querySelectorAll('img')]; const wait=Promise.all(imgs.map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r;}))); return Promise.race([wait,new Promise(r=>setTimeout(r,4000))]); }
@@ -845,7 +941,10 @@ async function makePdf(html,filename){
     dlg('สร้างไฟล์ PDF โดยตรงไม่ได้','จะเปิดหน้าต่างพิมพ์แทน ให้เลือก <b>“บันทึกเป็น PDF”</b>',[['ยกเลิก',null],['เปิดหน้าต่างพิมพ์',()=>doPrint(html),true]]);
   }
 }
-const hasMain=()=>S.rooms.some(r=>r.slots.some(s=>s.main&&byKey.has(s.main)));
+const hasMain=()=>allItems().some(x=>byKey.has(x[2].k));
+function availTxt(t,need){ const a=avail(t); if(!S.prov)return ''; let s;
+  if(a.dh)s='สต็อกสาขา: เช็กที่ดูโฮม'; else if(!a.known)s='สต็อกสาขา: ไม่มีข้อมูล'; else if(a.central)s='ไทวัสดุ: สต็อกคลังกลาง โทรเช็กสาขา'; else { const h=a.by[S.prov]; s=h.length?'มีที่ '+h.map(([n,q])=>`${n} ${q}`).join(', '):'ไม่มีในสาขา'+PV[S.prov]; if(h.length&&need&&h[0][1]<need)s+=' (ไม่ครบ '+need+')'; }
+  return `<br><span style="color:#55544f">${esc(s)}</span>`; }
 const needBoard=()=>{ if(!hasMain()){ dlg('ยังไม่มีรายการที่เลือก','กด “+ เลือก” ที่กระเบื้องที่ชอบ แล้วเลือกห้องและจุดติดตั้งก่อน'); return true; } return false; };
 const safe=s=>(s.trim()||'PNDX').replace(/[\\/:*?"<>|\s]+/g,'_').slice(0,40);
 const fname=p=>`${p}-${safe($('client').value)}-${new Date().toISOString().slice(0,10)}.pdf`;
@@ -854,20 +953,28 @@ $('btnPrintBoard').onclick=()=>{ if(needBoard())return; doPrint(buildSel()); };
 $('btnPrintView').onclick=()=>makePdf(buildView(),fname('tile-list'));
 /* ---------- text export / send / project file ---------- */
 function orderText(){
-  const G=orderLines(); const L=[`รายการกระเบื้อง — ${$('client').value.trim()||'(ยังไม่ระบุชื่อ)'}`,`ราคาตามหน้าร้าน ณ ${META.date}`,''];
+  const G=orderLines(); const L=[`รายการกระเบื้อง — ${$('client').value.trim()||'(ยังไม่ระบุชื่อ)'}`,`ราคาตามหน้าร้าน ณ ${META.date}${S.prov?' · สาขาจังหวัด'+PV[S.prov]:''}`,''];
   G.forEach(g=>{ L.push(`■ ${STORE[g.s].n} · ${g.lines.length} รายการ · รวม ฿${fmt(g.total)}`);
-    g.lines.forEach(x=>{ L.push(`- ${x.t.b} ${x.t.m}`,`  รหัส ${x.t.i} | ${sizeP(x.t)}`,`  ฿${fmt(x.p)}/กล่อง × ${x.boxes||'?'} กล่อง = ฿${fmt(x.total)}${x.missing?' (บางจุดยังไม่ระบุจำนวน)':''}`,`  ใช้ที่: ${x.uses.join(', ')}`,`  ${x.t.url}`); }); L.push(''); });
-  const notes=[]; S.rooms.forEach(r=>r.slots.forEach(s=>{ if(!s.main||!byKey.has(s.main))return; const al=s.alts.map(k=>byKey.get(k)).filter(Boolean); if(s.note||al.length)notes.push(`[${r.name} · ${s.name}]${s.note?' หมายเหตุ: '+s.note:''}${al.length?' · ตัวสำรอง: '+al.map(a=>`${a.b} ${a.m} (รหัส ${a.i}, ฿${fmt(a.p)})`).join(' ; '):''}`); }));
-  if(notes.length)L.push('หมายเหตุ / ตัวสำรอง',...notes,'');
-  L.push(`รวมทั้งหมด ฿${fmt(G.reduce((a,g)=>a+g.total,0))} (ไม่รวมปูนกาว ยาแนว ค่าแรง ค่าขนส่ง)`); return L.join('\n');
+    g.lines.forEach(x=>{ L.push(`- ${x.t.b} ${x.t.m}`,`  รหัส ${x.t.i} | ${sizeP(x.t)}`,`  ฿${fmt(x.p)}/กล่อง × ${x.boxes||'?'} กล่อง = ฿${fmt(x.total)}${x.missing?' (บางจุดยังไม่ระบุจำนวน)':''}`,`  ใช้ที่: ${x.uses.join(', ')}`,...(S.prov?['  '+availTxt(x.t,x.boxes).replace(/<[^>]+>/g,'')]:[]),`  ${x.t.url}`); }); L.push(''); });
+  const notes=[]; S.rooms.forEach(r=>r.slots.forEach(s=>{ if(s.note&&s.items.length)notes.push(`[${r.name} · ${s.name}] ${s.note}`); }));
+  if(notes.length)L.push('หมายเหตุ',...notes,'');
+  L.push(`รวมทั้งหมด ฿${fmt(G.reduce((a,g)=>a+g.total,0))} (จำนวนกล่องรวมเผื่อเศษตัดแล้ว · ไม่รวมปูนกาว ยาแนว ค่าแรง ค่าขนส่ง)`); return L.join('\n');
 }
 $('btnCopy').onclick=()=>dlg('รายการสั่งซื้อ',`<textarea readonly onclick="this.select()">${esc(orderText())}</textarea>`,[['ปิด',null],['คัดลอกข้อความ',b=>copyText(orderText(),b),true,true]]);
-$('btnLink').onclick=e=>copyText(shareUrl(),e.target);
-$('btnSend').onclick=()=>{ if(needBoard())return; const link=shareUrl(); const txt=orderText()+(LOCAL?'':'\n\nเปิดรายการนี้: '+link);
-  dlg('ส่งรายการให้ PNDX',`<p style="margin:0 0 10px">กดคัดลอก แล้ววางส่งให้ทีมงานทาง LINE หรืออีเมลได้เลย</p><textarea readonly onclick="this.select()">${esc(txt)}</textarea>`,[['ปิด',null],['คัดลอกข้อความ',b=>copyText(txt,b),true,true]]); };
-$('btnSave').onclick=async()=>{ const data=JSON.stringify({v:4,saved:new Date().toISOString(),rooms:S.rooms,client:$('client').value,designer:$('designer').value,approver:$('approver').value},null,1); const nm=`tile-project-${safe($('client').value)}.json`; const ok=await saveBlob(nm,new TextEncoder().encode(data),'application/json'); if(ok===true)dlg('บันทึกโปรเจกต์แล้ว',`ไฟล์ <b>${esc(nm)}</b> อยู่ในโฟลเดอร์ดาวน์โหลด เปิดกลับมาได้ด้วยปุ่ม “เปิดโปรเจกต์”`); else if(ok!=='declined')dlg('บันทึกไฟล์อัตโนมัติไม่ได้',`<textarea readonly onclick="this.select()">${esc(data)}</textarea>`); };
+$('btnShare').onclick=()=>{ if(needBoard())return; const link=shareUrl();
+  const btns=[['ปิด',null],['คัดลอกลิงก์',b=>copyText(link,b),true,true]]; if(navigator.share)btns.splice(1,0,['แชร์…',()=>navigator.share({title:'รายการกระเบื้อง '+($('client').value.trim()||''),url:link}).catch(()=>{}),false,true]);
+  dlg('บันทึกลิงก์โครงการ',`<p style="margin:0 0 10px">ลิงก์นี้เก็บรายการทั้งหมด (ชื่อโครงการ สาขา ห้อง กระเบื้อง พื้นที่ จำนวนกล่อง) เก็บไว้ใน LINE / โน้ต แล้วเปิดลิงก์นี้เพื่อทำต่อในเครื่องไหนก็ได้ หรือส่งให้ทีมงาน PNDX ดู</p><textarea readonly onclick="this.select()" style="height:90px">${esc(link)}</textarea>${LOCAL?'<p style="color:var(--warn);font-size:12px">เปิดจากไฟล์ในเครื่อง ลิงก์นี้ใช้ได้เฉพาะเครื่องนี้</p>':''}`,btns); };
+$('btnClear').onclick=()=>{ const n=allItems().length; if(!n){ dlg('ยังไม่มีรายการที่เลือก','ไม่มีอะไรให้ล้าง'); return; } const nl=allItems().filter(x=>x[2].lock).length;
+  dlg('ล้างรายการทั้งหมด?',`กระเบื้องที่เลือกไว้ทั้งหมด <b>${n} รายการ</b>${nl?` (รวมที่ล็อกแล้ว ${nl} รายการ)`:''} จะถูกเอาออกจากเครื่องนี้ ห้องและจุดติดตั้งยังอยู่<br><br>ย้อนกลับไม่ได้ — ถ้าอยากเก็บไว้ ให้กด “บันทึกลิงก์โครงการ” ก่อน`,[['ยกเลิก',null],['ล้างรายการ',()=>{ S.rooms.forEach(r=>r.slots.forEach(s=>{s.items=[];s.note='';})); afterSlotChange(); },true]]); };
+$('btnNewLink').onclick=()=>{
+  dlg('สร้างลิงก์ให้ลูกค้า',`<p style="margin:0">ลิงก์นี้เปิดหน้าเลือกกระเบื้องในโหมดลูกค้า พร้อมใส่ชื่อและสาขาให้ ลูกค้าแต่ละคนเก็บรายการในเครื่องของตัวเอง ไม่เห็นของกันและกัน</p>
+    <label class="fld">ชื่อลูกค้า / โครงการ<input id="nlName" placeholder="เช่น คุณสมชาย – บ้านชัยภูมิ"></label>
+    <label class="fld">สาขาที่จะซื้อ<select id="nlProv">${provOpts().replace('ทุกสาขา · ไม่เลือกจังหวัด','ไม่ระบุ')}</select></label>
+    <textarea id="nlOut" readonly onclick="this.select()" style="height:70px;margin-top:10px"></textarea>`,[['ปิด',null],['คัดลอกลิงก์',b=>copyText($('nlOut').value,b),true,true]]);
+  const up=()=>{ $('nlOut').value=baseUrl()+'#n='+b64e(JSON.stringify({c:$('nlName').value.trim(),pv:$('nlProv').value})); };
+  $('nlName').oninput=up; $('nlProv').onchange=up; up(); setTimeout(()=>$('nlName').focus(),50); };$('btnSave').onclick=async()=>{ const data=JSON.stringify({v:6,saved:new Date().toISOString(),rooms:S.rooms,client:$('client').value,designer:$('designer').value,approver:$('approver').value,prov:S.prov},null,1); const nm=`tile-project-${safe($('client').value)}.json`; const ok=await saveBlob(nm,new TextEncoder().encode(data),'application/json'); if(ok===true)dlg('บันทึกโปรเจกต์แล้ว',`ไฟล์ <b>${esc(nm)}</b> อยู่ในโฟลเดอร์ดาวน์โหลด เปิดกลับมาได้ด้วยปุ่ม “เปิดโปรเจกต์”`); else if(ok!=='declined')dlg('บันทึกไฟล์อัตโนมัติไม่ได้',`<textarea readonly onclick="this.select()">${esc(data)}</textarea>`); };
 $('btnLoad').onclick=()=>$('fileLoad').click();
-$('fileLoad').onchange=e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{ try{ const j=JSON.parse(rd.result); if(!j.rooms)throw 0; S.rooms=normRooms(j.rooms); ['client','designer','approver'].forEach(k=>{if(j[k]!=null)$(k).value=j[k];}); persist(); renderBoard(); updCnt(); dlg('เปิดโปรเจกต์แล้ว',`${S.rooms.length} ห้อง · ${boardCount()} รายการ`); }catch(_){ dlg('เปิดไฟล์ไม่ได้','ไฟล์นี้ไม่ใช่ไฟล์โปรเจกต์ของเว็บนี้'); } }; rd.readAsText(f); e.target.value=''; };
+$('fileLoad').onchange=e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{ try{ const j=JSON.parse(rd.result); if(!j.rooms)throw 0; S.rooms=normRooms(j.rooms); ['client','designer','approver'].forEach(k=>{if(j[k]!=null)$(k).value=j[k];}); if(PV[j.prov])S.prov=j.prov; persist(); renderProv(); renderBoard(); updCnt(); dlg('เปิดโปรเจกต์แล้ว',`${S.rooms.length} ห้อง · ${boardCount()} รายการ`); }catch(_){ dlg('เปิดไฟล์ไม่ได้','ไฟล์นี้ไม่ใช่ไฟล์โปรเจกต์ของเว็บนี้'); } }; rd.readAsText(f); e.target.value=''; };
 /* ---------- notes ---------- */
 const nVer=D.filter(t=>t.sv).length, nImg=D.filter(t=>t.im).length;
 $('pdate').textContent='ราคา ณ '+META.date;
@@ -876,8 +983,11 @@ $('note').innerHTML=`<p><b>ราคาและสต็อก:</b> อ่า�
 <p><b>สเปก:</b> ${fmt(nVer)} จาก ${fmt(D.length)} รายการมีสเปกจากตารางสเปกบนหน้าสินค้าของร้าน ช่องที่ร้านไม่ได้แจ้งจะไม่แสดงหรือแสดงว่า “ไม่ระบุ” ไม่มีการเดาค่า · ตร.ม./กล่องของไทวัสดุและดูโฮมคำนวณจากขนาดแผ่น × จำนวนแผ่น</p>
 <p><b>รูป:</b> ${fmt(nImg)} จาก ${fmt(D.length)} รายการมีรูปจากหน้าร้าน สีบนจออาจต่างจากของจริง</p>
 <p><b>สี สไตล์:</b> กลุ่มสีใช้ตามที่ร้านระบุ ถ้าร้านไม่ระบุจะจัดจากชื่อสินค้า · “สไตล์” เป็นการจัดกลุ่มโดยทีมงาน</p>
-<p><b>สต็อก:</b> โฮมโปรและไทวัสดุแสดงจำนวนตามหน้าเว็บ ดูโฮมแจ้งเฉพาะสถานะสินค้าหมด · ค่ากันลื่นแสดงเฉพาะที่ร้านระบุ</p>`;
-applyStaff(); refreshAll(); loadShared();
+<p><b>สต็อก:</b> โฮมโปรและไทวัสดุแสดงจำนวนตามหน้าเว็บ ดูโฮมแจ้งเฉพาะสถานะสินค้าหมด · ค่ากันลื่นแสดงเฉพาะที่ร้านระบุ</p>
+<p><b>สต็อกสาขา (ขอนแก่น · ชัยภูมิ · นครราชสีมา):</b> ${BRD?`โฮมโปรและไทวัสดุ อ่านจากหน้าสินค้าของร้าน ณ ${dth(BRD.at,1)} อัปเดตสัปดาห์ละครั้ง`:'ยังไม่มีข้อมูล'} · ดูโฮมไม่ได้ดึงอัตโนมัติ ให้กด “เช็ก Stock ที่สาขา” ที่หน้าร้าน · จำนวนในสาขาเปลี่ยนได้ทุกวัน โทรเช็กสาขาก่อนเดินทาง</p>
+<p><b>เผื่อเศษตัด:</b> จำนวนกล่อง = ปัดขึ้น(พื้นที่ × 1.07 ÷ ตร.ม./กล่อง) ปัดครั้งเดียวตอนท้าย หรือถ้าใส่จำนวนกล่องที่ใช้จริง = ปัดขึ้น(กล่อง × 1.07) — ตัวอย่าง 80 ตร.ม. กล่องละ 0.96 ตร.ม. → ใช้จริง 84 + เผื่อ 6 = 90 กล่อง</p>`;
+applyStaff(); renderProv(); refreshAll(); loadShared();
+window.addEventListener('hashchange',()=>{ if(location.hash.length>1)loadShared(); });
 if(!D.length)$('grid').innerHTML='<div class="empty">โหลดข้อมูลกระเบื้องไม่ได้ ตรวจว่าโฟลเดอร์ data อยู่คู่กับไฟล์นี้</div>';
 </script>
 </body>
